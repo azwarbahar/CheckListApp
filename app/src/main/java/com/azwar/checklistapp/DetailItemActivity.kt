@@ -15,6 +15,7 @@ import retrofit2.Response
 
 class DetailItemActivity : AppCompatActivity() {
 
+    private lateinit var sessionManager: SessionManager
     private lateinit var binding: ActivityDetailItemBinding
     private lateinit var apiClient: ApiClient
     private lateinit var kendaraanItem: KendaraanItemModel
@@ -25,6 +26,7 @@ class DetailItemActivity : AppCompatActivity() {
         binding = ActivityDetailItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
         apiClient = ApiClient()
+        sessionManager = SessionManager(this)
         binding.imgBack.setOnClickListener {
             finish()
         }
@@ -82,7 +84,7 @@ class DetailItemActivity : AppCompatActivity() {
 
         apiClient.getApiService()
             .renameItemchecklistItem(
-                "Bearer " + Constants.TOKEN,
+                "Bearer " + sessionManager.fetchAuthToken(),
                 checklistId,
                 kendaraanItem.id,
                 inputText
@@ -117,7 +119,7 @@ class DetailItemActivity : AppCompatActivity() {
     private fun updateStatu() {
 
         apiClient.getApiService()
-            .updateItemStatus(token = "Bearer " + Constants.TOKEN, checklistId, kendaraanItem.id)
+            .updateItemStatus(token = "Bearer " + sessionManager.fetchAuthToken(), checklistId, kendaraanItem.id)
             .enqueue(object : Callback<Responses.UpdateChecklistItemResponse> {
                 override fun onFailure(
                     call: Call<Responses.UpdateChecklistItemResponse>,
@@ -163,7 +165,7 @@ class DetailItemActivity : AppCompatActivity() {
         var apiClient: ApiClient
         apiClient = ApiClient()
         apiClient.getApiService()
-            .deleteChacklistItem(token = "Bearer " + Constants.TOKEN, checklistId, id)
+            .deleteChacklistItem(token = "Bearer " + sessionManager.fetchAuthToken(), checklistId, id)
             .enqueue(object : Callback<Responses.DeleteChecklistItemResponse> {
                 override fun onFailure(
                     call: Call<Responses.DeleteChecklistItemResponse>,

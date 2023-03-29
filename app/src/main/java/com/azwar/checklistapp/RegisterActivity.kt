@@ -37,7 +37,6 @@ class RegisterActivity : AppCompatActivity() {
 
         apiClient.getApiService()
             .register(
-                "Bearer " + Constants.TOKEN,
                 email.toString(),
                 password.toString(),
                 username.toString()

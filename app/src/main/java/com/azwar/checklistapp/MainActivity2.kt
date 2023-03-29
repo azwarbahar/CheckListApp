@@ -22,6 +22,7 @@ class MainActivity2 : AppCompatActivity() {
 
 
     private lateinit var kendaraan: KendaraanModel
+    private lateinit var sessionManager: SessionManager
 
     private lateinit var binding: ActivityMain2Binding
     private lateinit var apiClient: ApiClient
@@ -35,6 +36,7 @@ class MainActivity2 : AppCompatActivity() {
         setContentView(binding.root)
         kendaraan = intent.getParcelableExtra("kendaraan")!!
         apiClient = ApiClient()
+        sessionManager = SessionManager(this)
         getChacklist()
         binding.imgBack.setOnClickListener {
             finish()
@@ -81,7 +83,7 @@ class MainActivity2 : AppCompatActivity() {
     private fun createChacklistItem(inputText: String) {
 
         apiClient.getApiService()
-            .createChacklistItem(token = "Bearer " + Constants.TOKEN, kendaraan.id, inputText)
+            .createChacklistItem(token = "Bearer " + sessionManager.fetchAuthToken(), kendaraan.id, inputText)
             .enqueue(object : Callback<Responses.SaveChecklistItemResponse> {
                 override fun onFailure(
                     call: Call<Responses.SaveChecklistItemResponse>,
@@ -109,7 +111,7 @@ class MainActivity2 : AppCompatActivity() {
     private fun DeleteChacklist(id: Int?) {
         var apiClient: ApiClient
         apiClient = ApiClient()
-        apiClient.getApiService().deleteChacklist(token = "Bearer " + Constants.TOKEN, id)
+        apiClient.getApiService().deleteChacklist(token = "Bearer " + sessionManager.fetchAuthToken(), id)
             .enqueue(object : Callback<Responses.DeleteChecklistResponse> {
                 override fun onFailure(
                     call: Call<Responses.DeleteChecklistResponse>, t: Throwable
@@ -133,7 +135,7 @@ class MainActivity2 : AppCompatActivity() {
     private fun getChacklist() {
 
         apiClient.getApiService()
-            .getAllChacklistItem(token = "Bearer " + Constants.TOKEN, kendaraan.id)
+            .getAllChacklistItem(token = "Bearer " + sessionManager.fetchAuthToken(), kendaraan.id)
             .enqueue(object : Callback<Responses.GetChecklistItemResponse> {
                 override fun onFailure(
                     call: Call<Responses.GetChecklistItemResponse>,

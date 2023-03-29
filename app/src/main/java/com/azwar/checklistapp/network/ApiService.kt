@@ -10,7 +10,6 @@ interface ApiService {
     //Request Token
     @GET(Constants.BASE_URL + "login")
     fun login(
-        @Header("Authorization") token: String,
         @Field("password") password: String?,
         @Field("username") username: String?,
     ): Call<Responses.AuthResponse>
@@ -18,7 +17,6 @@ interface ApiService {
     //Register
     @GET(Constants.BASE_URL + "register")
     fun register(
-        @Header("Authorization") token: String,
         @Field("email") email: String?,
         @Field("password") password: String?,
         @Field("username") username: String?,

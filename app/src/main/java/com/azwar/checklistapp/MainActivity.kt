@@ -20,6 +20,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var sessionManager: SessionManager
 
     private lateinit var apiClient: ApiClient
     private lateinit var kendaraanAdapter: KendaraanAdapter
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         apiClient = ApiClient()
+        sessionManager = SessionManager(this)
 
         getChacklist()
 
@@ -42,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getChacklist() {
 
-        apiClient.getApiService().getAllChacklist("Bearer " + Constants.TOKEN)
+        apiClient.getApiService().getAllChacklist("Bearer " + sessionManager.fetchAuthToken())
             .enqueue(object : Callback<Responses.GetChecklistResponse> {
                 override fun onFailure(call: Call<Responses.GetChecklistResponse>, t: Throwable) {
                     Toast.makeText(this@MainActivity, t.message, Toast.LENGTH_SHORT)
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun createChacklist(inputText: String) {
 
-        apiClient.getApiService().createChacklist(token = "Bearer " + Constants.TOKEN, inputText)
+        apiClient.getApiService().createChacklist(token = "Bearer " + sessionManager.fetchAuthToken(), inputText)
             .enqueue(object : Callback<Responses.SaveChecklistResponse> {
                 override fun onFailure(call: Call<Responses.SaveChecklistResponse>, t: Throwable) {
                     Toast.makeText(this@MainActivity, "Gagal get data all", Toast.LENGTH_SHORT)
