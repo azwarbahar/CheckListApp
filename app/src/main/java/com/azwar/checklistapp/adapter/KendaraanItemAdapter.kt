@@ -1,10 +1,13 @@
 package com.azwar.checklistapp.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.azwar.checklistapp.Constants
+import com.azwar.checklistapp.DetailItemActivity
+import com.azwar.checklistapp.MainActivity2
 import com.azwar.checklistapp.data.KendaraanItemModel
 import com.azwar.checklistapp.data.Responses
 import com.azwar.checklistapp.databinding.ItemListBinding
@@ -23,33 +26,17 @@ class KendaraanItemAdapter(private val list: List<KendaraanItemModel>, var check
 
                 var id = get.id
 
+                itemView.setOnClickListener {
+
+                    val intent = Intent(context, DetailItemActivity::class.java)
+                    intent.putExtra("kendaraanItem", get)
+                    intent.putExtra("kendaraanId", checklistId)
+                    context.startActivity(intent)
+                }
+
             }
         }
 
-        private fun DeleteChacklistItem(id: Int?, checklistId: Int) {
-            var apiClient: ApiClient
-            apiClient = ApiClient()
-            apiClient.getApiService()
-                .deleteChacklistItem(token = "Bearer " + Constants.TOKEN, checklistId, id)
-                .enqueue(object : Callback<Responses.DeleteChecklistItemResponse> {
-                    override fun onFailure(
-                        call: Call<Responses.DeleteChecklistItemResponse>,
-                        t: Throwable
-                    ) {
-                    }
-
-                    override fun onResponse(
-                        call: Call<Responses.DeleteChecklistItemResponse>,
-                        response: Response<Responses.DeleteChecklistItemResponse>
-                    ) {
-                        val pesanRespon = response.message()
-                        val message = response.body()?.message
-                        val kode = response.body()?.statusCode
-                        Toast.makeText(itemView.context, message, Toast.LENGTH_SHORT).show()
-                    }
-                })
-
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolderView {

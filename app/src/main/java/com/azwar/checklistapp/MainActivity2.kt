@@ -38,13 +38,15 @@ class MainActivity2 : AppCompatActivity() {
             finish()
         }
 
+        binding.tvToolbar.setText(kendaraan.name)
+
         binding.tvHapus.setOnClickListener {
-            DeleteChacklistItem(kendaraan.id)
+            DeleteChacklist(kendaraan.id)
         }
 
     }
 
-    private fun DeleteChacklistItem(id: Int?) {
+    private fun DeleteChacklist(id: Int?) {
         var apiClient: ApiClient
         apiClient = ApiClient()
         apiClient.getApiService().deleteChacklist(token = "Bearer " + Constants.TOKEN, id)
