@@ -29,12 +29,59 @@ class DetailItemActivity : AppCompatActivity() {
 
         kendaraanItem = intent.getParcelableExtra("kendaraanItem")!!
         checklistId = intent.getIntExtra("kendaraanId", 0)
+        initData(kendaraanItem)
 
         binding.tvToolbar.setText(kendaraanItem.name)
 
         binding.tvHapus.setOnClickListener {
             DeleteChacklistItem(kendaraanItem.id, checklistId!!)
         }
+
+        binding.imgUbahStatus.setOnClickListener {
+            updateStatu()
+        }
+
+    }
+
+    private fun updateStatu() {
+
+        apiClient.getApiService()
+            .updateItemStatus(token = "Bearer " + Constants.TOKEN, checklistId, kendaraanItem.id)
+            .enqueue(object : Callback<Responses.UpdateChecklistItemResponse> {
+                override fun onFailure(
+                    call: Call<Responses.UpdateChecklistItemResponse>,
+                    t: Throwable
+                ) {
+                    Toast.makeText(this@DetailItemActivity, "Gagal get data all", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onResponse(
+                    call: Call<Responses.UpdateChecklistItemResponse>,
+                    response: Response<Responses.UpdateChecklistItemResponse>
+                ) {
+                    val pesanRespon = response.message()
+                    val message = response.body()?.message
+                    val kode = response.body()?.statusCode
+                    kendaraanItem = response.body()!!.data
+                    Toast.makeText(this@DetailItemActivity, message, Toast.LENGTH_SHORT).show()
+                }
+            })
+
+    }
+
+    private fun initData(kendaraanItem: KendaraanItemModel) {
+
+        binding.tvNama.setText("Nama : " + kendaraanItem.name)
+        binding.tvId.setText("ID : " + kendaraanItem.id)
+        var status = kendaraanItem.itemCompletionStatus
+        if (status == true) {
+            binding.tvId.setText("Status : Aktif")
+        } else {
+            binding.tvId.setText("Status : Non Aktif")
+        }
+
+
     }
 
     private fun DeleteChacklistItem(id: Int?, checklistId: Int) {
