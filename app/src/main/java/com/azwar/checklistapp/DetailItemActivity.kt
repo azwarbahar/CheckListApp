@@ -1,7 +1,9 @@
 package com.azwar.checklistapp
 
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import com.azwar.checklistapp.data.KendaraanItemModel
 import com.azwar.checklistapp.data.Responses
@@ -41,6 +43,75 @@ class DetailItemActivity : AppCompatActivity() {
             updateStatu()
         }
 
+        binding.imgEditNama.setOnClickListener {
+            showDialogInput()
+        }
+
+    }
+
+    private fun showDialogInput() {
+
+        val builder = AlertDialog.Builder(this)
+
+        builder.setTitle(title)
+
+        val view = layoutInflater.inflate(R.layout.dialog_input_single, null)
+        val input = view.findViewById<EditText>(R.id.et_value)
+
+        builder.setView(view)
+
+        builder.setPositiveButton("Simpan") { dialog, which ->
+            // Action for "OK".
+            val inputText = input.text.toString()
+            binding.tvNama.setText("Nama : " + inputText)
+            updateNama(inputText)
+            dialog.cancel()
+        }
+
+        builder.setNegativeButton("Batal") { dialog, which ->
+            // Action for "Cancel".
+            dialog.cancel()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+
+    }
+
+    private fun updateNama(inputText: String) {
+
+        apiClient.getApiService()
+            .renameItemchecklistItem(
+                "Bearer " + Constants.TOKEN,
+                checklistId,
+                kendaraanItem.id,
+                inputText
+            )
+            .enqueue(object : Callback<Responses.UpdateChecklistItemResponse> {
+                override fun onFailure(
+                    call: Call<Responses.UpdateChecklistItemResponse>,
+                    t: Throwable
+                ) {
+                    Toast.makeText(
+                        this@DetailItemActivity,
+                        "Gagal Rename",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+
+                override fun onResponse(
+                    call: Call<Responses.UpdateChecklistItemResponse>,
+                    response: Response<Responses.UpdateChecklistItemResponse>
+                ) {
+                    val pesanRespon = response.message()
+                    val message = response.body()?.message
+                    val kode = response.body()?.statusCode
+                    kendaraanItem = response.body()!!.data
+                    Toast.makeText(this@DetailItemActivity, message, Toast.LENGTH_SHORT).show()
+                }
+            })
+
     }
 
     private fun updateStatu() {
@@ -52,7 +123,11 @@ class DetailItemActivity : AppCompatActivity() {
                     call: Call<Responses.UpdateChecklistItemResponse>,
                     t: Throwable
                 ) {
-                    Toast.makeText(this@DetailItemActivity, "Gagal get data all", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this@DetailItemActivity,
+                        "Gagal get data all",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
 

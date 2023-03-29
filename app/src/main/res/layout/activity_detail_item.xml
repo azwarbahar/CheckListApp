@@ -50,46 +50,54 @@
 
     <TextView
         android:id="@+id/tv_nama"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_below="@id/rl_toolbar"
-        android:text="Nama : aaaa"
-        android:textSize="18sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_toolbar"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Nama : aaaa"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/img_edit_nama"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_nama"
+        android:layout_toRightOf="@id/tv_nama"
+        android:src="@drawable/baseline_edit_24" />
 
     <TextView
         android:id="@+id/tv_id"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_below="@id/tv_nama"
-        android:text="ID : 0"
-        android:textSize="18sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_nama"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:text="ID : 0"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_status"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_below="@id/tv_id"
-        android:text="Status : Aktif"
-        android:textSize="18sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_id"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Status : Aktif"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/img_ubah_status"
-        android:src="@drawable/baseline_autorenew_24"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@id/tv_status"
         android:layout_toRightOf="@id/tv_status"
-        android:layout_height="wrap_content"/>
+        android:src="@drawable/baseline_autorenew_24" />
 
 </RelativeLayout>
