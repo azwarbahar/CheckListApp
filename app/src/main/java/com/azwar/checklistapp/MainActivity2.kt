@@ -1,7 +1,9 @@
 package com.azwar.checklistapp
 
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +45,64 @@ class MainActivity2 : AppCompatActivity() {
         binding.tvHapus.setOnClickListener {
             DeleteChacklist(kendaraan.id)
         }
+
+        binding.fabAdd.setOnClickListener {
+            showDialogInput()
+        }
+    }
+
+    private fun showDialogInput() {
+
+        val builder = AlertDialog.Builder(this)
+
+        builder.setTitle(title)
+
+        val view = layoutInflater.inflate(R.layout.dialog_input_single, null)
+        val input = view.findViewById<EditText>(R.id.et_value)
+
+        builder.setView(view)
+
+        builder.setPositiveButton("Simpan") { dialog, which ->
+            // Action for "OK".
+            val inputText = input.text.toString()
+            createChacklistItem(inputText)
+        }
+
+        builder.setNegativeButton("Batal") { dialog, which ->
+            // Action for "Cancel".
+            dialog.cancel()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+
+    }
+
+    private fun createChacklistItem(inputText: String) {
+
+        apiClient.getApiService()
+            .createChacklistItem(token = "Bearer " + Constants.TOKEN, kendaraan.id, inputText)
+            .enqueue(object : Callback<Responses.SaveChecklistItemResponse> {
+                override fun onFailure(
+                    call: Call<Responses.SaveChecklistItemResponse>,
+                    t: Throwable
+                ) {
+                    Toast.makeText(this@MainActivity2, "Gagal get data all", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onResponse(
+                    call: Call<Responses.SaveChecklistItemResponse>,
+                    response: Response<Responses.SaveChecklistItemResponse>
+                ) {
+                    val pesanRespon = response.message()
+                    val message = response.body()?.message
+                    val kode = response.body()?.statusCode
+                    kendaraanItem = response.body()!!.data
+                    Toast.makeText(this@MainActivity2, message, Toast.LENGTH_SHORT).show()
+                    getChacklist()
+                }
+            })
 
     }
 

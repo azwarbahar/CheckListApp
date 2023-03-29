@@ -61,6 +61,7 @@ interface ApiService {
     @POST(Constants.BASE_URL + "checklist/{checklistId}/item")
     fun createChacklistItem(
         @Header("Authorization") token: String,
+        @Path("checklistId") checklistId: Int?,
         @Field("itemName") itemName: String?,
     ): Call<Responses.SaveChecklistItemResponse>
 
